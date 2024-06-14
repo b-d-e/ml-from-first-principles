@@ -1,6 +1,6 @@
 # Machine Learning from First Principles
 
-[![Actions Status](https://github.com/b-d-e/ml-from-first-principles/workflows/CI/badge.svg)](https://github.com/b-d-e/ml-from-first-principleso/actions)
+[![Actions Status](https://github.com/b-d-e/ml-from-first-principles/workflows/CI/badge.svg)](https://github.com/b-d-e/ml-from-first-principles/actions)
 <!-- [![PyPI version][pypi-version]][pypi-link]
 [![PyPI platforms][pypi-platforms]][pypi-link] -->
 
