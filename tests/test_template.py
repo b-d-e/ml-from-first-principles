@@ -9,4 +9,5 @@ def test_add() -> None:
 
 
 if __name__ == "__main__":
+    print("THIS IS NOT AN ACTUAL TEST.")
     pytest.main()
