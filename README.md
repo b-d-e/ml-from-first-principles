@@ -1,8 +1,10 @@
 # Machine Learning from First Principles
 
-[![Actions Status](https://github.com/b-d-e/ml-from-first-principles/workflows/CI/badge.svg)](https://github.com/b-d-e/ml-from-first-principles/actions)
+[![Actions Status](https://github.com/b-d-e/ml-from-first-principles/workflows/CI/badge.svg)](https://github.com/b-d-e/ml-from-first-principles/actions) [![Work in Progress](https://img.shields.io/badge/status-work%20in%20progress-orange.svg)](https://github.com/b-d-e/ml-from-first-principles)
+
 <!-- [![PyPI version][pypi-version]][pypi-link]
 [![PyPI platforms][pypi-platforms]][pypi-link] -->
+
 
 Implementing Machine Learning algorithms from first principles, without relying on Python libraries.
 
