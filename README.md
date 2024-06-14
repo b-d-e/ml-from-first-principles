@@ -10,13 +10,13 @@ Implementing Machine Learning algorithms from first principles, without relying 
 
 ## Installation
 
-```bash
-python -m pip install mlfp
-```
+<!-- ```bash
+python -m pip install .
+``` -->
 
 From source:
 ```bash
-git clone https://github.com/b-d-e/ml-first-principles
+git clone https://github.com/b-d-e/ml-from-first-principles
 cd Machine Learning from First Principles
 python -m pip install .
 ```
@@ -34,8 +34,8 @@ Distributed under the terms of the [Apache license](LICENSE).
 
 
 <!-- prettier-ignore-start -->
-[actions-badge]:            https://github.com/b-d-e/ml-first-principles/workflows/CI/badge.svg
-[actions-link]:             https://github.com/b-d-e/ml-first-principles/actions
+[actions-badge]:            https://github.com/b-d-e/ml-from-first-principles/workflows/CI/badge.svg
+[actions-link]:             https://github.com/b-d-e/ml-from-first-principles/actions
 <!-- [pypi-link]:                https://pypi.org/project/Machine Learning from First Principles/
 [pypi-platforms]:           https://img.shields.io/pypi/pyversions/Machine Learning from First Principles
 [pypi-version]:             https://img.shields.io/pypi/v/Machine Learning from First Principles -->
