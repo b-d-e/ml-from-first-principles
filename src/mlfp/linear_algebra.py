@@ -44,6 +44,6 @@ class Vector:
             raise ValueError(error_messages.vector_length_mismatch())
         return sum(a * b for a, b in zip(self.elements, other.elements, strict=False))
 
-    def magnitude(self) -> float:
-        mag: float = sum(x**2 for x in self.elements) ** 0.5
-        return mag
+    # def magnitude(self) -> float:
+    #     mag: float = sum(x**2 for x in self.elements) ** 0.5
+    #     return mag
