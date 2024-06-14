@@ -13,11 +13,13 @@ Implementing Machine Learning algorithms from first principles, without relying 
 This will incrementally build up functionality for ML algorithms - initially this will be naively and slow. Over time, I hope to iteratively improve, benchmarking against numpy, scikit-learn, etc.
 
 ### Linear Algebra Fundamentals:
+On branch `issues/1/linear-algebra`
+
 Implement:
 
 - [ ] Vector Operations
-    - [ ] Addition & Subtraction
-    - [ ] Scalar Multiplication
+    - [x] Addition & Subtraction
+    - [x] Scalar Multiplication
     - [ ] Vector Multiplication (Dot Product)
 - [ ] Generalise to Matrices
     - [ ] Addition & Subtraction
