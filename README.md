@@ -17,7 +17,7 @@ python -m pip install .
 From source:
 ```bash
 git clone https://github.com/b-d-e/ml-from-first-principles
-cd Machine Learning from First Principles
+cd ml-from-first-principles
 python -m pip install .
 ```
 
