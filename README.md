@@ -17,17 +17,19 @@ On branch `issues/1/linear-algebra`
 
 Implement:
 
-- [ ] Vector Operations
+- [x] Vector Operations
     - [x] Addition & Subtraction
     - [x] Scalar Multiplication
-    - [ ] Vector Multiplication (Dot Product)
+    - [x] Vector Multiplication (Dot Product)
+    - [x] Unit Tests
 - [ ] Generalise to Matrices
     - [ ] Addition & Subtraction
     - [ ] Scalar Multiplication
     - [ ] Matrix Multiplication (Dot Product)
+    - [x] Unit Tests
 - [ ] Matrix Transposition
+    - [x] Unit Tests
 
-_+ unit tests for the above_
 
 ## Roadmap
 ...
