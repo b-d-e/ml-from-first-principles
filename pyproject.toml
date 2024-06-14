@@ -1,13 +1,14 @@
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
 [project]
 name = "ml_from_first_principles"
 version = "0.1.0"
 authors = [
-  { name = "Benjamin"},
+  { name = "Benjamin" }
 ]
-description = "Implementing Machine Learning algorithms from first principles, without relying on Python libraries. "
+description = "Implementing Machine Learning algorithms from first principles, without relying on Python libraries."
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
@@ -43,11 +44,15 @@ Homepage = "https://github.com/b-d-e/ml-first-principles"
 "Bug Tracker" = "https://github.com/b-d-e/ml-first-principles/issues"
 Discussions = "https://github.com/b-d-e/ml-first-principles/discussions"
 Changelog = "https://github.com/b-d-e/ml-first-principles/releases"
+
 [tool.hatch]
 envs.default.dependencies = [
   "pytest",
   "pytest-cov",
 ]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mlfp"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
@@ -63,7 +68,7 @@ testpaths = [
 
 [tool.coverage]
 run.source = ["mlfp"]
-port.exclude_lines = [
+report.exclude_lines = [
   'pragma: no cover',
   '\.\.\.',
   'if typing.TYPE_CHECKING:',
