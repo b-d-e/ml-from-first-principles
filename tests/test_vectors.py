@@ -64,18 +64,25 @@ def test_dot_product() -> None:
         assert expected == result, f"Expected {expected}, got {result}"
 
 
-def test_vector_length_mismatch() -> None:
-    with pytest.raises(ValueError) as e:
-        Vector([1, 2, 3]) + Vector([1, 2])
-    assert str(e.value) == "Vectors must be of the same length"
+def test_add_vectors_with_different_lengths() -> None:
+    v1 = Vector([1, 2, 3])
+    v2 = Vector([4, 5])
+    with pytest.raises(ValueError, match="Vectors must be of the same length"):
+        _ = v1 + v2
 
-    with pytest.raises(ValueError) as e:
-        Vector([1, 2, 3]) - Vector([1, 2])
-    assert str(e.value) == "Vectors must be of the same length"
 
-    with pytest.raises(ValueError) as e:
-        Vector([1, 2, 3]).dot(Vector([1, 2]))
-    assert str(e.value) == "Vectors must be of the same length"
+def test_sub_vectors_with_different_lengths() -> None:
+    v1 = Vector([1, 2, 3])
+    v2 = Vector([4, 5])
+    with pytest.raises(ValueError, match="Vectors must be of the same length"):
+        _ = v1 - v2
+
+
+def test_dot_vectors_with_different_lengths() -> None:
+    v1 = Vector([1, 2, 3])
+    v2 = Vector([4, 5])
+    with pytest.raises(ValueError, match="Vectors must be of the same length"):
+        _ = v1.dot(v2)
 
 
 if __name__ == "__main__":
