@@ -2,7 +2,7 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 [project]
-name = "Machine Learning from First Principles"
+name = "ml_from_first_principles"
 version = "0.1.0"
 authors = [
   { name = "Benjamin"},
