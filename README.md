@@ -22,9 +22,9 @@ python -m pip install .
 ## Usage
 
 
-## Contributing
+<!-- ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for instructions on how to contribute.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for instructions on how to contribute. -->
 
 ## License
 
