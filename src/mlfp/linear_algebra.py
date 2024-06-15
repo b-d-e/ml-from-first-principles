@@ -4,6 +4,8 @@
 
 from __future__ import annotations
 
+import numpy as np  # for conversion purposes only
+
 from mlfp import error_messages
 
 
@@ -59,6 +61,9 @@ class Vector:
     # def magnitude(self) -> float:
     #     mag: float = sum(x**2 for x in self.elements) ** 0.5
     #     return mag
+
+    def to_numpy(self) -> np.ndarray:
+        return np.array(self.elements)
 
 
 class Matrix:
@@ -146,6 +151,9 @@ class Matrix:
     def transpose(self) -> Matrix:
         # must handle non-square matrices
         return Matrix([[row[i] for row in self.elements] for i in range(self.shape[1])])
+
+    def to_numpy(self) -> np.ndarray:
+        return np.array(self.elements)
 
 
 def ones(shape: tuple[int, int]) -> Matrix:
