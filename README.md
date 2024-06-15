@@ -45,14 +45,15 @@ Matrix multiplication timing (mlfp): 11.73682175000431
 ## 🛣️ Roadmap
 
 As a start, I'll look to create a simple dense MNIST classifier. Roughly, these are the steps I will look to sequentially implement:
-1. basic densely connected network, represented with weights and biases
-2. Implement common activation functions
-3. forward pass - for single layer, multi-layer, whole network
-4. loss function (start with cross entropy)
-5. batched losses
-6. backpropogation - chain rule to backprop errors, calculating new w&b
-7. optimisation algo for gradient descent
-8. data loader
+1. simple linear algebra / core numpy equiv
+2. basic densely connected network, represented with weights and biases
+3. Implement common activation functions
+4. forward pass - for single layer, multi-layer, whole network
+5. loss function (start with cross entropy)
+6. batched losses
+7. backpropogation - chain rule to backprop errors, calculating new w&b
+8. optimisation algo for gradient descent
+9. data loader
 10. training loop, combining above
 11. evaluation
 
