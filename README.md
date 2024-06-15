@@ -32,6 +32,15 @@ Implement:
 - [x] Matrix Transposition
     - [x] Unit Tests
 
+> _mlfp.linear_algebra is currently *incredibly* slow compared to numpy. no optimisation attempts made yet:_
+```
+Matrix creation timing (numpy): 0.000746000005165115
+Matrix creation timing (mlfp): 2.462499833200127e-05
+Matrix addition timing (numpy): 0.0003061659954255447
+Matrix addition timing (mlfp): 0.05240800000319723
+Matrix multiplication timing (numpy): 0.016511209003510885
+Matrix multiplication timing (mlfp): 11.73682175000431
+```
 
 ## 🛣️ Roadmap
 ...
