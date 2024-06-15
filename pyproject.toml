@@ -87,7 +87,6 @@ disallow_incomplete_defs = false
 check_untyped_defs = true
 strict = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
-python_executable = "~/radioconda/envs/mlfp/bin/python"
 
 [[tool.mypy.overrides]]
 module = "mlfp.*"

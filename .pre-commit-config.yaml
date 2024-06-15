@@ -35,5 +35,7 @@ repos:
       - id: mypy
         files: src
         args: []
+        # entry: python -m mypy
         additional_dependencies:
           - pytest
+          - numpy
