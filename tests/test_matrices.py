@@ -41,15 +41,15 @@ def test_non_square_matrix_transpose():
 def test_matrix_multiplication_with_empty_matrix():
     matrix1 = Matrix([[1, 2], [3, 4]])
     matrix2 = Matrix([])
-    with pytest.raises(ValueError):
-        result = matrix1 @ matrix2
+    with pytest.raises(ValueError, match="Matrices must have compatible shapes"):
+        matrix1 @ matrix2
 
 
 def test_matrix_addition_with_mismatched_dimensions():
     matrix1 = Matrix([[1, 2], [3, 4]])
     matrix2 = Matrix([[1, 2, 3], [4, 5, 6]])
-    with pytest.raises(ValueError):
-        result = matrix1 + matrix2
+    with pytest.raises(ValueError, match="Matrices must be of the same shape"):
+        matrix1 + matrix2
 
 
 def test_scalar_multiplication_with_zero():

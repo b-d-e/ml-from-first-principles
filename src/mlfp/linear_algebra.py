@@ -18,7 +18,9 @@ class Vector:
     def __len__(self) -> int:
         return len(self.elements)
 
-    def __eq__(self, other: Vector) -> bool:
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Vector):
+            return NotImplemented
         return self.elements == other.elements
 
     def __elements__(self) -> list[float]:
@@ -81,7 +83,9 @@ class Matrix:
     def __len__(self) -> int:
         return self.shape[0] * self.shape[1]
 
-    def __eq__(self, other: Matrix) -> bool:
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Matrix):
+            return False
         return self.elements == other.elements
 
     def __elements__(self) -> list[list[float]]:
@@ -144,9 +148,9 @@ class Matrix:
         return Matrix([[row[i] for row in self.elements] for i in range(self.shape[1])])
 
 
-def ones(shape: tuple) -> Matrix:
+def ones(shape: tuple[int, int]) -> Matrix:
     return Matrix([[1 for _ in range(shape[1])] for _ in range(shape[0])])
 
 
-def zeros(shape: tuple) -> Matrix:
+def zeros(shape: tuple[int, int]) -> Matrix:  # feels bad setting shape here...
     return Matrix([[0 for _ in range(shape[1])] for _ in range(shape[0])])
