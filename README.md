@@ -80,7 +80,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for instructions on how to contribute. --
 
 ## License
 
-Distributed under the terms of the [GNU GPL license](LICENSE).
+Distributed under the terms of the [GNU General Public License](LICENSE).
 
 
 <!-- prettier-ignore-start -->
