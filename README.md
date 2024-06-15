@@ -24,13 +24,13 @@ Implement:
     - [x] Scalar Multiplication
     - [x] Vector Multiplication (Dot Product)
     - [x] Unit Tests
-- [ ] Generalise to Matrices
-    - [ ] Addition & Subtraction
-    - [ ] Scalar Multiplication
-    - [ ] Matrix Multiplication (Dot Product)
-    - [ ] Unit Tests
-- [ ] Matrix Transposition
-    - [ ] Unit Tests
+- [x] Generalise to Matrices
+    - [x] Addition & Subtraction
+    - [x] Scalar Multiplication
+    - [x] Matrix Multiplication (Dot Product)
+    - [x] Unit Tests
+- [x] Matrix Transposition
+    - [x] Unit Tests
 
 
 ## 🛣️ Roadmap
