@@ -27,7 +27,9 @@ classifiers = [
   "Topic :: Scientific/Engineering",
   "Typing :: Typed",
 ]
-dependencies = []
+dependencies = [
+  "numpy"
+]
 
 [project.optional-dependencies]
 test = [
@@ -49,6 +51,7 @@ Changelog = "https://github.com/b-d-e/ml-first-principles/releases"
 envs.default.dependencies = [
   "pytest",
   "pytest-cov",
+  "numpy"
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -84,6 +87,7 @@ disallow_incomplete_defs = false
 check_untyped_defs = true
 strict = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+python_executable = "~/radioconda/envs/mlfp/bin/python"
 
 [[tool.mypy.overrides]]
 module = "mlfp.*"
