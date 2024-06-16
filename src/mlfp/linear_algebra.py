@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+import random
 from typing import Any
 
 import numpy as np  # for conversion purposes only
@@ -69,7 +70,7 @@ class Vector:
 
 
 class Matrix:
-    def __init__(self, elements: list[list[float]]) -> None:
+    def __init__(self, elements: list[list[float]] | None = None) -> None:
         if not elements:  # handle empty
             self.elements = []
             self.shape = (0, 0)
@@ -157,10 +158,25 @@ class Matrix:
     def to_numpy(self) -> np.ndarray[Any, np.dtype[np.float64]]:
         return np.array(self.elements)
 
+    def random(self, shape: tuple[int, int]) -> Matrix:
+        return Matrix(
+            [[random.random() for _ in range(shape[1])] for _ in range(shape[0])]
+        )
+
+    def zeros(self, shape: tuple[int, int]) -> Matrix:
+        return Matrix([[0 for _ in range(shape[1])] for _ in range(shape[0])])
+
+    def ones(self, shape: tuple[int, int]) -> Matrix:
+        return Matrix([[1 for _ in range(shape[1])] for _ in range(shape[0])])
+
+    def apply(self, func: Any) -> Matrix:
+        # Apply a function to each element of the matrix
+        return Matrix([[func(item) for item in row] for row in self.elements])
+
 
 def ones(shape: tuple[int, int]) -> Matrix:
-    return Matrix([[1 for _ in range(shape[1])] for _ in range(shape[0])])
+    return Matrix().ones(shape)
 
 
-def zeros(shape: tuple[int, int]) -> Matrix:  # feels bad setting shape here...
-    return Matrix([[0 for _ in range(shape[1])] for _ in range(shape[0])])
+def zeros(shape: tuple[int, int]) -> Matrix:
+    return Matrix().zeros(shape)
