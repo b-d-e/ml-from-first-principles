@@ -43,9 +43,7 @@ class Tensor:
     def __eq__(self, other: object) -> bool:
         if type(other) is not Tensor:
             return False
-        # # check shape match
-        # if self.shape is not other.shape:
-        #     return False
+        # do we need to check shape?
         # check element match
         return not self.elements != other.elements
 
