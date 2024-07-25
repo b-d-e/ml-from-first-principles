@@ -1,182 +1,229 @@
-# a file to implement linear algebra operations without numpy
+# This file implements a versatile n-d Tensor data class,
+# without relying on Numpy or other Python libraries
 
-# vector implementation
+from __future__ import annotations  # allow methods of Tensor class to return Tensor
 
-from __future__ import annotations
+from collections.abc import Callable, Sequence
+from typing import Any  # , Union
 
-import random
-from typing import Any
+import numpy as np  # _only_ used for to_numpy method
 
-import numpy as np  # for conversion purposes only
+from mlfp import error_messages as em
 
-from mlfp import error_messages
+# TensorElementsType = Union[
+#     Sequence["TensorElementsType"], float
+# ]  # Allow arbitrary depth
+TensorElementsType = (
+    Sequence["TensorElementsType"] | float | None
+    # n.b. not sure if the None will break things here
+)  # Allow arbitrary depth
+TensorShapeType = tuple[int, ...]
 
 
-class Vector:
-    # TODO: vectors can be reimplemented as a subclass of a Matrix, OR removed entirely?
-    def __init__(self, elements: list[float]) -> None:
+class Tensor:
+    def __init__(self, elements: TensorElementsType) -> None:
         self.elements = elements
+        self.shape = self.__get_shape(self.elements)
 
     def __repr__(self) -> str:
-        return f"Vector({self.elements})"
+        return f"Tensor(elements={self.elements})"
 
-    def __len__(self) -> int:
-        return len(self.elements)
-
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Vector):
-            return NotImplemented
-        return self.elements == other.elements
-
-    def __elements__(self) -> list[float]:
-        return self.elements
-
-    def __add__(self, other: Vector) -> Vector:
-        if len(self.elements) != len(other.elements):
-            raise ValueError(error_messages.vector_length_mismatch())
-        return Vector(
-            [a + b for a, b in zip(self.elements, other.elements, strict=False)]
-        )
-
-    def __sub__(self, other: Vector) -> Vector:
-        if len(self.elements) != len(other.elements):
-            raise ValueError(error_messages.vector_length_mismatch())
-        return Vector(
-            [a - b for a, b in zip(self.elements, other.elements, strict=False)]
-        )
-
-    def __mul__(self, scalar: float) -> Vector:
-        if isinstance(scalar, int | float):
-            return Vector([a * scalar for a in self.elements])
-        raise TypeError(error_messages.vector_unsupported_operand(scalar))
-
-    def __rmul__(self, scalar: float) -> Vector:
-        return self.__mul__(scalar)
-
-    def __matmul__(self, other: Vector) -> float:
-        if len(self.elements) != len(other.elements):
-            raise ValueError(error_messages.vector_length_mismatch())
-        return sum(a * b for a, b in zip(self.elements, other.elements, strict=False))
-
-    def dot(self, other: Vector) -> float:
-        return self.__matmul__(other)
-
-    # def magnitude(self) -> float:
-    #     mag: float = sum(x**2 for x in self.elements) ** 0.5
-    #     return mag
-
-    def to_numpy(self) -> np.ndarray[Any, np.dtype[np.float64]]:
-        return np.array(self.elements)
-
-
-class Matrix:
-    def __init__(self, elements: list[list[float]] | None = None) -> None:
-        if not elements:  # handle empty
-            self.elements = []
-            self.shape = (0, 0)
-            return
-        self.elements = elements
-        self.shape = (len(elements), len(elements[0]))
-
-    def __repr__(self) -> str:
-        # pretty print
-        # get num chars in longest element, and pad items
-        max_len = max(len(str(item)) for row in self.elements for item in row)
-        m = ""
-        for row in self.elements:
-            m += "  ".join(str(item).ljust(max_len) for item in row) + "\n"
-
-        return f"Matrix:\n{m}"
-
-    def __len__(self) -> int:
-        return self.shape[0] * self.shape[1]
+    def __get_shape(self, ndarray: TensorElementsType | float) -> TensorShapeType:
+        if isinstance(ndarray, list):
+            outermost_size = len(ndarray)
+            if outermost_size == 0:
+                return (0,)
+            row_shape = self.__get_shape(ndarray[0])
+            for element in ndarray:
+                if self.__get_shape(element) != row_shape:
+                    raise em.InconsistentShapeError()
+            return (outermost_size, *row_shape)
+        return ()
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Matrix):
+        if type(other) is not Tensor:
             return False
-        return self.elements == other.elements
+        # # check shape match
+        # if self.shape is not other.shape:
+        #     return False
+        # check element match
+        return not self.elements != other.elements
 
-    def __elements__(self) -> list[list[float]]:
-        return self.elements
+    def flatten(self) -> list[float]:
+        # Implement this method to flatten the tensor
+        flat_list = []
 
-    def __add__(self, other: Matrix) -> Matrix:
+        def __flatten(lst: TensorElementsType) -> None:
+            if isinstance(lst, Sequence) and not isinstance(lst, str | bytes):
+                for item in lst:
+                    __flatten(item)
+            # Ensure only floats and integers are added
+            elif isinstance(lst, float | int):
+                flat_list.append(float(lst))  # Convert integers to floats
+            else:
+                raise em.TensorElementError()
+
+        __flatten(self.elements)
+        return flat_list
+
+    def _reshape_recursive(
+        self, flat: list[float], shape: tuple[int, ...]
+    ) -> TensorElementsType:
+        if len(shape) == 1:
+            return flat[: shape[0]]
+        size = shape[0]
+        sub_size = int(len(flat) / size)
+        return [
+            self._reshape_recursive(flat[i * sub_size : (i + 1) * sub_size], shape[1:])
+            for i in range(size)
+        ]
+
+    def reshape(self, shape: tuple[int, ...]) -> Tensor:
+        # return a new tensor with the same elements, but a different shape
+        # flatten and restructure - is there a better way?
+        # flatten
+        flat = self.flatten()
+        # check new shape is valid
+        shape_len = 1
+        for dim in shape:
+            shape_len *= dim
+        if shape_len != len(flat):
+            raise em.InvalidReshapeShapes(self.shape, len(shape), shape_len)
+        # restructure
+        return Tensor(self._reshape_recursive(flat, shape))
+
+    def __add__(self, other: Tensor) -> Tensor:
+        # slightly janky - flatten, add, reshape
+        # check same shape
         if self.shape != other.shape:
-            raise ValueError(
-                error_messages.matrix_shape_mismatch(self.shape, other.shape)
-            )
-        return Matrix(
-            [
-                [a + b for a, b in zip(row1, row2, strict=False)]
-                for row1, row2 in zip(self.elements, other.elements, strict=False)
-            ]
-        )
+            raise em.ShapeMismatchError(self.shape, other.shape)
+        # element-wise addition
+        # flatten
+        flat_1 = self.flatten()
+        flat_2 = other.flatten()
+        flat_sum = [a + b for a, b in zip(flat_1, flat_2, strict=False)]
+        # reshape
+        return Tensor(self._reshape_recursive(flat_sum, self.shape))
 
-    def __sub__(self, other: Matrix) -> Matrix:
-        if self.shape != other.shape:
-            raise ValueError(
-                error_messages.matrix_shape_mismatch(self.shape, other.shape)
-            )
-        return Matrix(
-            [
-                [a - b for a, b in zip(row1, row2, strict=False)]
-                for row1, row2 in zip(self.elements, other.elements, strict=False)
-            ]
-        )
+    def __sub__(self, other: Tensor) -> Tensor:
+        return self + other.__mul__(-1)
 
-    def __mul__(self, scalar: float) -> Matrix:
-        if isinstance(scalar, int | float):
-            return Matrix([[a * scalar for a in row] for row in self.elements])
-        raise TypeError(
-            error_messages.matrix_unsupported_operand(type(scalar).__name__)
-        )  # we actually should never hit this, given strict type hints
+    def __mul__(self, scalar: float) -> Tensor:
+        # element-wise multiplication
+        # flatten
+        flat = self.flatten()
+        flat_prod = [a * scalar for a in flat]
+        # reshape
+        return Tensor(self._reshape_recursive(flat_prod, self.shape))
 
-    def __rmul__(self, scalar: float) -> Matrix:
-        return self.__mul__(scalar)
+    def __rmul__(self, scalar: float) -> Tensor:
+        return self.__mul__(scalar)  # scalar multiplication is commutative
 
-    def __matmul__(self, other: Matrix) -> Matrix:
+    def __matmul__(self, other: Tensor) -> Tensor:
+        if (
+            len(self.shape) > 2
+            or len(other.shape) > 2
+            or len(self.shape) == 0
+            or len(other.shape) == 0
+        ):
+            raise em.MatMulMaxSizeError(self.shape, other.shape)
         if self.shape[1] != other.shape[0]:
-            raise ValueError(
-                error_messages.matrix_incompatible_shapes(self.shape, other.shape)
-            )
-        return Matrix(
+            raise em.MatMulIncompatibleShapesError(self.shape, other.shape)
+
+        # Ensure elements are lists of lists
+        if (
+            not isinstance(self.elements, list)
+            or not all(isinstance(row, list) for row in self.elements)
+            or not isinstance(other.elements, list)
+            or not all(isinstance(row, list) for row in other.elements)
+        ):
+            raise em.MatMulTypeError(type(self.elements), type(other.elements))
+
+        # Perform matrix multiplication
+        result = [
             [
-                [
-                    sum(a * b for a, b in zip(row1, col2, strict=False))
-                    for col2 in zip(*other.elements, strict=False)
-                ]
-                for row1 in self.elements
+                sum(
+                    self.elements[i][k] * other.elements[k][j]
+                    for k in range(self.shape[1])
+                )
+                for j in range(other.shape[1])
             ]
-        )
+            for i in range(self.shape[0])
+        ]
 
-    def dot(self, other: Matrix) -> Matrix:
-        return self.__matmul__(other)
+        return Tensor(result)
 
-    def transpose(self) -> Matrix:
+    def apply(self, func: Callable[[float], float]) -> Tensor:
+        def _apply(lst: TensorElementsType) -> TensorElementsType:
+            if isinstance(lst, list):
+                return [_apply(item) for item in lst]
+            if isinstance(lst, float | int):
+                return func(float(lst))
+            raise em.TensorElementError()
+
+        return Tensor(_apply(self.elements))
+
+    def transpose(self) -> Tensor:
         # must handle non-square matrices
-        return Matrix([[row[i] for row in self.elements] for i in range(self.shape[1])])
+        raise NotImplementedError
+        # return Tensor([[row[i] for row in self.elements] \
+        # for i in range(self.shape[1])])
 
     def to_numpy(self) -> np.ndarray[Any, np.dtype[np.float64]]:
         return np.array(self.elements)
 
-    def random(self, shape: tuple[int, int]) -> Matrix:
-        return Matrix(
-            [[random.random() for _ in range(shape[1])] for _ in range(shape[0])]
-        )
 
-    def zeros(self, shape: tuple[int, int]) -> Matrix:
-        return Matrix([[0 for _ in range(shape[1])] for _ in range(shape[0])])
-
-    def ones(self, shape: tuple[int, int]) -> Matrix:
-        return Matrix([[1 for _ in range(shape[1])] for _ in range(shape[0])])
-
-    def apply(self, func: Any) -> Matrix:
-        # Apply a function to each element of the matrix
-        return Matrix([[func(item) for item in row] for row in self.elements])
+# Function which mirror numpy usage...
 
 
-def ones(shape: tuple[int, int]) -> Matrix:
-    return Matrix().ones(shape)
+def zeros(shape: TensorShapeType) -> Tensor:
+    """Return a new array of given shape, filled with zeros."""
+
+    def _zeros(shape: TensorShapeType) -> TensorElementsType:
+        if len(shape) == 1:
+            return [0.0] * shape[0]
+        return [_zeros(shape[1:]) for _ in range(shape[0])]
+
+    return Tensor(_zeros(shape))
 
 
-def zeros(shape: tuple[int, int]) -> Matrix:
-    return Matrix().zeros(shape)
+def ones(shape: TensorShapeType) -> Tensor:
+    """Return a new array of given shape, filled with ones."""
+
+    def _ones(shape: TensorShapeType) -> TensorElementsType:
+        if len(shape) == 1:
+            return [1.0] * shape[0]
+        return [_ones(shape[1:]) for _ in range(shape[0])]
+
+    return Tensor(_ones(shape))
+
+
+def empty(shape: TensorShapeType) -> Tensor:
+    """Return a new array of given shape, without initializing entries."""
+
+    def _empty(shape: TensorShapeType) -> TensorElementsType:
+        if len(shape) == 1:
+            return [None] * shape[0]
+        return [_empty(shape[1:]) for _ in range(shape[0])]
+
+    return Tensor(_empty(shape))
+
+
+def full(shape: TensorShapeType, fill_value: float) -> Tensor:
+    """Return a new array of given shape, filled with fill_value."""
+
+    def _full(shape: TensorShapeType) -> TensorElementsType:
+        if len(shape) == 1:
+            return [fill_value] * shape[0]
+        return [_full(shape[1:]) for _ in range(shape[0])]
+
+    return Tensor(_full(shape))
+
+
+def eye(N: int) -> Tensor:
+    """Return a 2-D array with ones on the diagonal and zeros elsewhere."""
+
+    def _eye(N: int) -> TensorElementsType:
+        return [[1.0 if i == j else 0.0 for j in range(N)] for i in range(N)]
+
+    return Tensor(_eye(N))
