@@ -3,6 +3,7 @@
 
 from __future__ import annotations  # allow methods of Tensor class to return Tensor
 
+import random as randlib
 from collections.abc import Callable, Sequence
 from typing import Any  # , Union
 
@@ -225,3 +226,14 @@ def eye(N: int) -> Tensor:
         return [[1.0 if i == j else 0.0 for j in range(N)] for i in range(N)]
 
     return Tensor(_eye(N))
+
+
+def random(shape: TensorShapeType) -> Tensor:
+    """Return a new array of given shape, filled with random values."""
+
+    def _random(shape: TensorShapeType) -> TensorElementsType:
+        if len(shape) == 1:
+            return [randlib.random() for _ in range(shape[0])]
+        return [_random(shape[1:]) for _ in range(shape[0])]
+
+    return Tensor(_random(shape))
