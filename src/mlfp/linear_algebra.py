@@ -107,12 +107,17 @@ class Tensor:
     def __sub__(self, other: Tensor) -> Tensor:
         return self + other.__mul__(-1)
 
-    def __mul__(self, scalar: float) -> Tensor:
-        # element-wise multiplication
-        # flatten
+    def __mul__(self, scalar: float | Tensor) -> Tensor:
+        if isinstance(scalar, Tensor):
+            if self.shape != scalar.shape:
+                raise em.ShapeMismatchError(self.shape, scalar.shape)
+            flat_1 = self.flatten()
+            flat_2 = scalar.flatten()
+            flat_prod = [a * b for a, b in zip(flat_1, flat_2, strict=False)]
+            return Tensor(self._reshape_recursive(flat_prod, self.shape))
+        # otherwise, it's a float (removed 'else' to keep ruff happy)
         flat = self.flatten()
         flat_prod = [a * scalar for a in flat]
-        # reshape
         return Tensor(self._reshape_recursive(flat_prod, self.shape))
 
     def __rmul__(self, scalar: float) -> Tensor:
@@ -151,6 +156,15 @@ class Tensor:
         ]
 
         return Tensor(result)
+
+    def __pow__(self, power: float) -> Tensor:
+        def _power(x: float) -> float:
+            return float(x**power)
+
+        return self.apply(_power)
+
+    def sum(self) -> float:
+        return sum(self.flatten())
 
     def apply(self, func: Callable[[float], float]) -> Tensor:
         def _apply(lst: TensorElementsType) -> TensorElementsType:
