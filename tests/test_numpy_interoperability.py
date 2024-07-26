@@ -3,93 +3,67 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from mlfp.linear_algebra import Matrix, Vector
+import mlfp.linear_algebra as la
 
 
-def test_vector_creation():
-    data = [1, 2, 3]
-    vector = Vector(data)
-    np_array = np.array(data)
-    assert np.allclose(
-        vector.to_numpy(), np_array
-    ), "Vector creation does not match NumPy array."
+def test_zeros():
+    shape = (2, 3)
+    tensor_zeros = la.zeros(shape)
+    numpy_zeros = np.zeros(shape)
+    assert np.allclose(tensor_zeros.to_numpy(), numpy_zeros)
 
 
-def test_matrix_creation():
-    data = [[1, 2], [3, 4]]
-    matrix = Matrix(data)
-    np_array = np.array(data)
-    assert np.allclose(
-        matrix.to_numpy(), np_array
-    ), "Matrix creation does not match NumPy array."
+def test_ones():
+    shape = (2, 3)
+    tensor_ones = la.ones(shape)
+    numpy_ones = np.ones(shape)
+    assert np.allclose(tensor_ones.to_numpy(), numpy_ones)
 
 
-def test_vector_addition():
-    data1 = [1, 2, 3]
-    data2 = [4, 5, 6]
-    vector1 = Vector(data1)
-    vector2 = Vector(data2)
-    np_array1 = np.array(data1)
-    np_array2 = np.array(data2)
-    assert np.allclose(
-        (vector1 + vector2).to_numpy(), np_array1 + np_array2
-    ), "Vector addition does not match NumPy."
+def test_addition():
+    tensor_a = la.Tensor([[1, 2], [3, 4]])
+    tensor_b = la.Tensor([[5, 6], [7, 8]])
+    tensor_result = tensor_a + tensor_b
+
+    numpy_a = np.array([[1, 2], [3, 4]])
+    numpy_b = np.array([[5, 6], [7, 8]])
+    numpy_result = numpy_a + numpy_b
+
+    assert np.allclose(tensor_result.to_numpy(), numpy_result)
 
 
-def test_matrix_addition():
-    data1 = [[1, 2], [3, 4]]
-    data2 = [[5, 6], [7, 8]]
-    matrix1 = Matrix(data1)
-    matrix2 = Matrix(data2)
-    np_array1 = np.array(data1)
-    np_array2 = np.array(data2)
-    assert np.allclose(
-        (matrix1 + matrix2).to_numpy(), np_array1 + np_array2
-    ), "Matrix addition does not match NumPy."
+def test_multiplication():
+    tensor = la.Tensor([[1, 2], [3, 4]])
+    scalar = 3
+    tensor_result = tensor * scalar
+
+    numpy_array = np.array([[1, 2], [3, 4]])
+    numpy_result = numpy_array * scalar
+
+    assert np.allclose(tensor_result.to_numpy(), numpy_result)
 
 
-def test_vector_scalar_multiplication():
-    data = [1, 2, 3]
-    scalar = 2
-    vector = Vector(data)
-    np_array = np.array(data)
-    assert np.allclose(
-        (vector * scalar).to_numpy(), np_array * scalar
-    ), "Vector scalar multiplication does not match NumPy."
+def test_matrix_multiplication():
+    tensor_a = la.Tensor([[1, 2], [3, 4]])
+    tensor_b = la.Tensor([[5, 6], [7, 8]])
+    tensor_result = tensor_a @ tensor_b
+
+    numpy_a = np.array([[1, 2], [3, 4]])
+    numpy_b = np.array([[5, 6], [7, 8]])
+    numpy_result = numpy_a @ numpy_b
+
+    assert np.allclose(tensor_result.to_numpy(), numpy_result)
 
 
-def test_matrix_scalar_multiplication():
-    data = [[1, 2], [3, 4]]
-    scalar = 2
-    matrix = Matrix(data)
-    np_array = np.array(data)
-    assert np.allclose(
-        (matrix * scalar).to_numpy(), np_array * scalar
-    ), "Matrix scalar multiplication does not match NumPy."
+def test_reshape():
+    tensor = la.Tensor([[1, 2, 3, 4]])
+    new_shape = (2, 2)
+    tensor_reshaped = tensor.reshape(new_shape)
 
+    numpy_array = np.array([[1, 2, 3, 4]])
+    numpy_reshaped = numpy_array.reshape(new_shape)
 
-def test_vector_dot_product():
-    data1 = [1, 2, 3]
-    data2 = [4, 5, 6]
-    vector1 = Vector(data1)
-    vector2 = Vector(data2)
-    np_array1 = np.array(data1)
-    np_array2 = np.array(data2)
-    assert np.allclose(
-        vector1 @ vector2, np_array1 @ np_array2
-    ), "Vector dot product does not match NumPy."
-
-
-def test_matrix_dot_product():
-    data1 = [[1, 2], [3, 4]]
-    data2 = [[5, 6], [7, 8]]
-    matrix1 = Matrix(data1)
-    matrix2 = Matrix(data2)
-    np_array1 = np.array(data1)
-    np_array2 = np.array(data2)
-    assert np.allclose(
-        (matrix1 @ matrix2).to_numpy(), np_array1 @ np_array2
-    ), "Matrix multiplication does not match NumPy."
+    assert np.allclose(tensor_reshaped.to_numpy(), numpy_reshaped)
 
 
 if __name__ == "__main__":
