@@ -24,6 +24,8 @@ class LossFunction:
 
 
 class MeanSquaredError(LossFunction):
+    """Mean Squared Error loss function for regression tasks."""
+
     def __init__(self) -> None:
         super().__init__("MeanSquaredError")
 
@@ -35,6 +37,8 @@ class MeanSquaredError(LossFunction):
 
 
 class CrossEntropy(LossFunction):
+    """Cross Entropy loss function for classification tasks."""
+
     def __init__(self) -> None:
         super().__init__("CrossEntropy")
 
