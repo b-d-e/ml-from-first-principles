@@ -16,7 +16,7 @@ This will incrementally build up functionality for ML algorithms - initially thi
 
 ### 🛣️ Roadmap
 
-This project will look to build up a MLP MNIST classifier from the ground up.
+To start, this project will look to build up a MLP MNIST classifier from the ground up.
 Roughly, these are the steps I expect to follow:
 1. simple linear algebra / core numpy equiv ✅
 2. basic densely connected network, represented with weights and biases ✅
