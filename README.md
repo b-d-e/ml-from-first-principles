@@ -22,7 +22,7 @@ Roughly, these are the steps I expect to follow:
 2. basic densely connected network, represented with weights and biases ✅
 3. Implement common activation functions ✅
 4. forward pass - for single layer, multi-layer, whole network ✅
-5. loss function (start with cross entropy)
+5. loss function (start with cross entropy and MSE) ✅
 6. batched losses
 7. backpropogation - chain rule to backprop errors, calculating new w&b
 8. optimisation algo for gradient descent
